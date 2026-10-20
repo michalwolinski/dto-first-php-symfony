@@ -28,7 +28,7 @@ are about infrastructure.
 ```bash
 docker compose build
 
-docker compose run --rm cli composer test       # 53 tests, 116 assertions
+docker compose run --rm cli composer test       # 55 tests, 118 assertions
 docker compose run --rm cli composer doctrine   # the five rules, checked
 docker compose run --rm cli composer bench      # the two benchmarks
 
@@ -106,10 +106,13 @@ final readonly class InvoiceResponse { /* id, customerId, amountMinor, currency,
 ```
 
 Enforced by: no contract type that leaves the process (`Contract/Http`, `Contract/Message`) may import
-`App\Domain`, and no public controller action may declare a domain return type — including `?Invoice`, a
-union, or a domain type the file renamed with `as`. A parameter attribute with arguments puts parentheses
-inside the parameter list, so the search is bounded to the declaration rather than assuming the first `)`
-closes it.
+`App\Domain` **or name it in the body** — `public \App\Domain\Invoice\Invoice $invoice` is the forbidden
+response with the `use` statement left out, and an import scan alone cannot see it. No public controller
+action may declare a domain return type either, including `?Invoice`, a union, a domain type the file
+renamed with `as`, one written out with a leading backslash, or a `public static` action; a parameter
+attribute with arguments puts parentheses inside the parameter list, so the search is bounded to the
+declaration rather than assuming the first `)` closes it, and private helpers are skipped because an
+aggregate that stays inside the process is not a leak.
 
 What it cannot see is the value. `return $this->json($invoice);` hands the aggregate to the client without
 naming a domain type in any signature, and no text search will find it. The return-type check catches the
@@ -162,15 +165,16 @@ half of rule 4, used to leave everything green; it no longer does.
 
 One breakage per shape lives in `tests/Fixtures/Violations/`: `Domain/LeaksTheFramework`,
 `Domain/NamesAFullyQualifiedType`, `Domain/UsesAGroupImport`, `Domain/ValidatesPayloads`,
-`…/V9/UnvalidatedRequest`, `…/V9/OrphanRequest`, `…/Http/LeakyResponse`, `…/Message/UnversionedMessage`,
-`Infrastructure/Http/LeakyController` (twice — one of them with arguments inside a parameter attribute) and
+`…/V9/UnvalidatedRequest`, `…/V9/OrphanRequest`, `…/Http/LeakyResponse`,
+`…/Http/NamesTheDomainDirectly`, `…/Message/UnversionedMessage`, `Infrastructure/Http/LeakyController`
+(three times — one of them with arguments inside a parameter attribute, one of them `public static`) and
 `Infrastructure/Http/NullableAliasedController`, plus `Application/Mapper/FixtureMapper`, which is there so
 that exactly one contract is an orphan.
 
-The leading-backslash import is the one shape that cannot live there as a file: `no_leading_import_slash`
-is part of the style preset, so `pint` repairs the fixture and leaves the rule looking proven by a file
-that no longer breaks it. That test writes its shape into a temporary tree instead, where nothing formats
-it.
+Two shapes cannot live there as files, because the style preset repairs both: an import with a leading
+backslash (`no_leading_import_slash`) and a return type written out in full
+(`fully_qualified_strict_types`). Those two are written by the tests that need them, into a temporary
+tree where nothing formats them.
 
 ## What the tests pin
 
