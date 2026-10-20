@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Architecture\DoctrineGate;
+
+require_once dirname(__DIR__).'/vendor/autoload.php';
+
+$gate = new DoctrineGate(dirname(__DIR__).'/src');
+
+echo "DTO-first: the five rules\n\n";
+
+foreach (DoctrineGate::RULES as $rule => $description) {
+    $violations = $gate->check($rule);
+
+    printf(
+        "  %-6s %-58s %s\n",
+        $rule,
+        $description,
+        count($violations) === 0 ? 'pass' : sprintf('FAIL (%d)', count($violations)),
+    );
+
+    foreach ($violations as $violation) {
+        echo '         ', $violation->describe(), "\n";
+    }
+}
+
+echo "\n";
+
+if ($gate->passes()) {
+    echo "The gate is passing. A doctrine nobody enforces is a wish.\n";
+
+    exit(0);
+}
+
+echo "The gate is failing: fix the violations above, do not relax the rules.\n";
+
+exit(1);

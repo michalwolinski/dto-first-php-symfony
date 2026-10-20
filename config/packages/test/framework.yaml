@@ -1,0 +1,3 @@
+# WebTestCase needs framework.test to be true, and only in this environment.
+framework:
+    test: true

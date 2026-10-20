@@ -1,0 +1,10 @@
+framework:
+    messenger:
+        transports:
+            # In-memory on purpose: the point of the contract in this repository is the shape of
+            # the message, not the broker. Swapping in a real transport is a config change, which
+            # is exactly the claim the article makes about versioned DTOs.
+            events:
+                dsn: 'in-memory://'
+        routing:
+            'App\Application\Contract\Message\InvoiceIssuedMessage': events

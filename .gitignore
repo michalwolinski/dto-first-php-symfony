@@ -1,0 +1,15 @@
+/vendor/
+/phpunit.xml
+/.phpunit.cache/
+/var/
+/.idea/
+/.vscode/
+composer.phar
+.DS_Store
+/config/reference.php
+
+# The committed .env holds placeholders only; the real values go here. Symfony can also
+# dump an env into .env.local.php at the root, which is equally not for a repository.
+/.env.local
+/.env.local.php
+/.env.*.local

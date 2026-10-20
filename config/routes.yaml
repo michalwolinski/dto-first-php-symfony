@@ -1,0 +1,7 @@
+# The HTTP boundary is the only place in this application where a framework type is allowed to
+# exist. Everything it hands onwards is a DTO from App\Application\Contract.
+controllers:
+    resource:
+        path: ../src/Infrastructure/Http/
+        namespace: App\Infrastructure\Http
+    type: attribute

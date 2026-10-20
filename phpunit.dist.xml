@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         colors="true"
+         bootstrap="tests/bootstrap.php"
+         cacheDirectory=".phpunit.cache"
+         failOnDeprecation="true"
+         failOnNotice="true"
+         failOnWarning="true"
+         beStrictAboutOutputDuringTests="true"
+>
+    <php>
+        <ini name="display_errors" value="1"/>
+        <ini name="error_reporting" value="-1"/>
+        <server name="APP_ENV" value="test" force="true"/>
+        <!-- KernelTestCase and WebTestCase need to know which kernel to boot. -->
+        <server name="KERNEL_CLASS" value="App\Kernel"/>
+        <server name="SHELL_VERBOSITY" value="-1"/>
+    </php>
+
+    <testsuites>
+        <testsuite name="domain">
+            <directory>tests/Domain</directory>
+        </testsuite>
+        <testsuite name="boundary">
+            <directory>tests/Boundary</directory>
+        </testsuite>
+        <testsuite name="architecture">
+            <directory>tests/Architecture</directory>
+        </testsuite>
+    </testsuites>
+
+    <source restrictNotices="true"
+            restrictWarnings="true"
+            ignoreSuppressionOfDeprecations="true"
+    >
+        <include>
+            <directory>src</directory>
+        </include>
+    </source>
+</phpunit>

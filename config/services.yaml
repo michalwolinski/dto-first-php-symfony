@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Kernel.php'
+            - '../src/Domain/'              # the domain is wired by hand: it has no dependencies to inject
+            - '../src/Application/Contract/' # DTOs are values, not services: the container never constructs one
+
+    App\Domain\Invoice\InvoiceRepository:
+        alias: App\Infrastructure\Persistence\InMemoryInvoiceRepository

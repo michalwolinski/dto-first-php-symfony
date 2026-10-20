@@ -1,0 +1,32 @@
+services:
+  cli:
+    build:
+      context: .
+    image: dto-first:php-8.6.0RC3
+    working_dir: /app
+    volumes:
+      # Source is baked into the image; the mounts are for iterating locally, and vendor stays
+      # the image's own (the anonymous volume below), so a host without PHP 8.6 can still run
+      # everything in this repository.
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./config:/app/config
+      - ./bin:/app/bin
+      - ./benchmarks:/app/benchmarks
+      - ./public:/app/public
+      - /app/vendor
+
+  # Drives the HTTP boundary by hand: `docker compose run --rm --service-ports server`
+  server:
+    build:
+      context: .
+    image: dto-first:php-8.6.0RC3
+    working_dir: /app
+    command: ['php', '-S', '0.0.0.0:8070', '-t', 'public', 'public/index.php']
+    ports:
+      - '8070:8070'
+    volumes:
+      - ./src:/app/src
+      - ./config:/app/config
+      - ./public:/app/public
+      - /app/vendor

@@ -1,0 +1,60 @@
+{
+    "name": "michalwolinski/dto-first-php-symfony",
+    "description": "DTO-first as a standard doctrine: five rules for the boundary, each one enforced by a test that fails the build when it is broken. Runnable PHP 8.6 / Symfony 8.2 demo.",
+    "type": "project",
+    "license": "MIT",
+    "homepage": "https://wolinski.com/blog/dto-first-php-symfony.html",
+    "authors": [
+        {
+            "name": "Michał Woliński",
+            "homepage": "https://wolinski.com",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "ext-ctype": "*",
+        "ext-iconv": "*",
+        "php": ">=8.6",
+        "symfony/clock": "8.2.*@dev",
+        "symfony/dotenv": "8.2.*@dev",
+        "symfony/framework-bundle": "8.2.*@dev",
+        "symfony/intl": "8.2.*@dev",
+        "symfony/messenger": "8.2.*@dev",
+        "symfony/property-access": "8.2.*@dev",
+        "symfony/routing": "8.2.*@dev",
+        "symfony/serializer": "8.2.*@dev",
+        "symfony/uid": "8.2.*@dev",
+        "symfony/validator": "8.2.*@dev",
+        "symfony/yaml": "8.2.*@dev"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.32",
+        "phpunit/phpunit": "^13.4",
+        "symfony/browser-kit": "8.2.*@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/",
+            "App\\Tests\\Fixtures\\": "tests/Fixtures/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": false
+    },
+    "scripts": {
+        "test": "phpunit",
+        "cs": "pint --test",
+        "cs:fix": "pint",
+        "gate": "phpunit --testsuite architecture",
+        "doctrine": "php bin/doctrine",
+        "bench": "php benchmarks/mapping-tax.php"
+    }
+}
